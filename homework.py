@@ -126,7 +126,7 @@ def read_package(workout_type: str, data: list) -> Training:
     """Прочитать данные полученные от датчиков."""
 
     workout_generator: dict[str, Type[
-        Union[Training]]] = {
+        Training]] = {
         'SWM': Swimming,
         'RUN': Running,
         'WLK': SportsWalking
@@ -139,7 +139,7 @@ def read_package(workout_type: str, data: list) -> Training:
                 [workout_type for workout_type in workout_generator])
             )
         )
-    training: Union[Training] = workout_generator[workout_type](*data)
+    training: Training = workout_generator[workout_type](*data)
     return training
 
 
@@ -157,4 +157,4 @@ if __name__ == '__main__':
 
     for workout_type, data in packages:
         training = read_package(workout_type, data)
-        main(training)     
+        main(training)
