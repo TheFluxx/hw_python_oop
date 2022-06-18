@@ -74,6 +74,7 @@ class Running(Training):
             * constants.MIN_IN_H
         )
 
+
 class SportsWalking(Training):
     """Тренировка: спортивная ходьба."""
     LEN_STEP: float = constants.LEN_STEP
@@ -85,12 +86,14 @@ class SportsWalking(Training):
     def get_spent_calories(self) -> float:
         """Получить количество затраченных калорий в ходьбе."""
         return (
-                (
-                        constants.WALKING_CALORIE_WEIGHT_MULTIPLIER_COEFF
-                        * self.weight + (self.get_mean_speed() ** 2 // self.height)
-                        * constants.WALKING_CALORIE_MEAN_SPEED_MULTIPLIER_COEFF * self.weight
-                )
-                * self.duration * constants.MIN_IN_H
+            (
+                constants.WALKING_CALORIE_WEIGHT_MULTIPLIER_COEFF
+                * self.weight
+                + (self.get_mean_speed() ** 2 // self.height)
+                * constants.WALKING_CALORIE_MEAN_SPEED_MULTIPLIER_COEFF
+                * self.weight
+            )
+            * self.duration * constants.MIN_IN_H
         )
 
 
