@@ -1,7 +1,6 @@
 from dataclasses import dataclass, asdict
 from typing import Union, Type
 
-import constants
 
 
 @dataclass
@@ -13,7 +12,11 @@ class InfoMessage:
     distance: float
     speed: float
     calories: float
-    info: str = constants.INFO_MESSAGE
+    info: str = ('Тип тренировки: {training_type}; '
+                     'Длительность: {duration:.3f} ч.; '
+                     'Дистанция: {distance:.3f} км; '
+                     'Ср. скорость: {speed:.3f} км/ч; '
+                     'Потрачено ккал: {calories:.3f}.')
 
     def get_message(self):
         """Возвращает строку с инфомацией о тренировке."""
@@ -22,8 +25,8 @@ class InfoMessage:
 
 class Training:
     """Базовый класс тренировки."""
-    M_IN_KM: int = constants.M_IN_KM
-    LEN_STEP: float = constants.LEN_STEP
+    M_IN_KM: float = 1000
+    LEN_STEP: float = 0.65
 
     def __init__(self,
                  action: int,
@@ -37,7 +40,7 @@ class Training:
 
     def get_distance(self) -> float:
         """Получить дистанцию в км."""
-        return self.action * self.LEN_STEP / constants.M_IN_KM
+        return self.action * self.LEN_STEP / self.M_IN_KM
 
     def get_mean_speed(self) -> float:
         """Получить среднюю скорость движения."""
@@ -58,26 +61,33 @@ class Training:
 
 class Running(Training):
     """Тренировка: бег."""
-    LEN_STEP: float = constants.LEN_STEP
+    LEN_STEP: float = 0.65
+    M_IN_KM: float = 1000
+    MIN_IN_H: float = 60
+    COEFF_1_FOR_CALCULATING_BURNED_CALORIES_RUNNING: float = 18
+    COEFF_2_FOR_CALCULATING_BURNED_CALORIES_RUNNING: float = 20
 
     def get_spent_calories(self) -> float:
         """Получить количество затраченных калорий в беге."""
         return (
             (
-                constants.RUNNING_CALORIE_MULTIPLIER_COEFF
+                self.COEFF_1_FOR_CALCULATING_BURNED_CALORIES_RUNNING
                 * self.get_mean_speed()
-                - constants.RUNNING_CALORIE_DOWNGRADER_COEFF
+                - self.COEFF_2_FOR_CALCULATING_BURNED_CALORIES_RUNNING
             )
             * self.weight
-            / constants.M_IN_KM
+            / self.M_IN_KM
             * self.duration
-            * constants.MIN_IN_H
+            * self.MIN_IN_H
         )
 
 
 class SportsWalking(Training):
     """Тренировка: спортивная ходьба."""
-    LEN_STEP: float = constants.LEN_STEP
+    LEN_STEP: float = 0.65
+    MIN_IN_H: float = 60
+    COEFF_1_FOR_CALCULATING_BURNED_CALORIES_SPORTSWALKING: float = 0.035
+    COEFF_2_FOR_CALCULATING_BURNED_CALORIES_SPORTSWALKING: float = 0.029
 
     def __init__(self, action, duration, weight, height):
         super().__init__(action, duration, weight)
@@ -87,19 +97,23 @@ class SportsWalking(Training):
         """Получить количество затраченных калорий в ходьбе."""
         return (
             (
-                constants.WALKING_CALORIE_WEIGHT_MULTIPLIER_COEFF
+                self.COEFF_1_FOR_CALCULATING_BURNED_CALORIES_SPORTSWALKING
                 * self.weight
                 + (self.get_mean_speed() ** 2 // self.height)
-                * constants.WALKING_CALORIE_MEAN_SPEED_MULTIPLIER_COEFF
+                * self.COEFF_2_FOR_CALCULATING_BURNED_CALORIES_SPORTSWALKING
                 * self.weight
             )
-            * self.duration * constants.MIN_IN_H
+            * self.duration * self.MIN_IN_H
         )
 
 
 class Swimming(Training):
     """Тренировка: плавание."""
-    LEN_STEP: float = constants.LEN_PADDLE
+    LEN_STEP: float = 1.38
+    M_IN_KM: float = 1000
+    COEFF_1_FOR_CALCULATING_BURNED_CALORIES_SWIMMING: float = 1.1
+    COEFF_2_FOR_CALCULATING_BURNED_CALORIES_SWIMMING: float = 2
+
 
     def __init__(self, action, duration, weight, length_pool, count_pool):
         super().__init__(action, duration, weight)
@@ -108,14 +122,21 @@ class Swimming(Training):
 
     def get_mean_speed(self) -> float:
         """Получить среднюю скорость движения."""
-        return (self.length_pool * self.count_pool
-                / constants.M_IN_KM / self.duration)
+        return (
+            self.length_pool * self.count_pool
+                / self.M_IN_KM / self.duration
+        )
 
     def get_spent_calories(self) -> float:
         """Получить количество затраченных калорий."""
-        return ((self.get_mean_speed()
-                 + constants.SWIMMING_INCREASE_CALORIE_COEFF)
-                * constants.SWIMMING_CALORIE_MULTIPLIER_COEFF * self.weight)
+        return (
+            (
+                self.get_mean_speed()
+                 +  self.COEFF_1_FOR_CALCULATING_BURNED_CALORIES_SWIMMING
+            )
+                * self.COEFF_2_FOR_CALCULATING_BURNED_CALORIES_SWIMMING 
+                * self.weight
+                )
 
     def get_distance(self) -> float:
         """Получить дистанцию в км."""
@@ -139,8 +160,19 @@ def read_package(workout_type: str, data: list) -> Training:
                 [workout_type for workout_type in workout_generator])
             )
         )
-    training: Training = workout_generator[workout_type](*data)
-    return training
+
+    for data_items in data:
+        if data_items == 0:
+            raise IndexError(
+                'Data items can not be null'
+            )
+
+    if len(data) == 0:
+        raise IndexError(
+            'Invalid data'
+        )
+
+    return workout_generator[workout_type](*data)
 
 
 def main(training: Union[Training, Running, SportsWalking, Swimming]) -> None:
