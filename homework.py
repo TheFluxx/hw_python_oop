@@ -2,7 +2,6 @@ from dataclasses import dataclass, asdict
 from typing import Union, Type
 
 
-
 @dataclass
 class InfoMessage:
     """Информационное сообщение о тренировке."""
@@ -114,7 +113,6 @@ class Swimming(Training):
     COEFF_1_FOR_CALCULATING_BURNED_CALORIES_SWIMMING: float = 1.1
     COEFF_2_FOR_CALCULATING_BURNED_CALORIES_SWIMMING: float = 2
 
-
     def __init__(self, action, duration, weight, length_pool, count_pool):
         super().__init__(action, duration, weight)
         self.length_pool = length_pool
@@ -132,9 +130,9 @@ class Swimming(Training):
         return (
             (
                 self.get_mean_speed()
-                 +  self.COEFF_1_FOR_CALCULATING_BURNED_CALORIES_SWIMMING
+                +  self.COEFF_1_FOR_CALCULATING_BURNED_CALORIES_SWIMMING
             )
-                * self.COEFF_2_FOR_CALCULATING_BURNED_CALORIES_SWIMMING 
+                * self.COEFF_2_FOR_CALCULATING_BURNED_CALORIES_SWIMMING
                 * self.weight
                 )
 
