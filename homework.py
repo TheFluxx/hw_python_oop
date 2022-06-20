@@ -12,10 +12,10 @@ class InfoMessage:
     speed: float
     calories: float
     info: str = ('Тип тренировки: {training_type}; '
-                     'Длительность: {duration:.3f} ч.; '
-                     'Дистанция: {distance:.3f} км; '
-                     'Ср. скорость: {speed:.3f} км/ч; '
-                     'Потрачено ккал: {calories:.3f}.')
+                    'Длительность: {duration:.3f} ч.; '
+                    'Дистанция: {distance:.3f} км; '
+                    'Ср. скорость: {speed:.3f} км/ч; '
+                    'Потрачено ккал: {calories:.3f}.')
 
     def get_message(self):
         """Возвращает строку с инфомацией о тренировке."""
@@ -122,7 +122,7 @@ class Swimming(Training):
         """Получить среднюю скорость движения."""
         return (
             self.length_pool * self.count_pool
-                / self.M_IN_KM / self.duration
+            / self.M_IN_KM / self.duration
         )
 
     def get_spent_calories(self) -> float:
@@ -130,11 +130,11 @@ class Swimming(Training):
         return (
             (
                 self.get_mean_speed()
-                +  self.COEFF_1_FOR_CALCULATING_BURNED_CALORIES_SWIMMING
+                + self.COEFF_1_FOR_CALCULATING_BURNED_CALORIES_SWIMMING
             )
-                * self.COEFF_2_FOR_CALCULATING_BURNED_CALORIES_SWIMMING
-                * self.weight
-                )
+            * self.COEFF_2_FOR_CALCULATING_BURNED_CALORIES_SWIMMING
+            * self.weight
+        )
 
     def get_distance(self) -> float:
         """Получить дистанцию в км."""
