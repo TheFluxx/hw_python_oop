@@ -160,9 +160,9 @@ def read_package(workout_type: str, data: list) -> Training:
         )
 
     if 'SWM' not in data:
-            raise ValueError(
-                'Invalid data'
-            )
+        raise ValueError(
+            'Invalid data'
+        )
 
     if len(data) == 0:
         raise IndexError(
