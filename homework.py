@@ -70,7 +70,7 @@ class Running(Training):
         """Получить количество затраченных калорий в беге."""
         return (
             (
-                self.MULTIPLIER_FOR_AVERAGE_SPEED_RUNNING
+                self.MULTIPLIER_FOR_AVERAGE_SPEED
                 * self.get_mean_speed()
                 - self.SUBTRACTED_FROM_AVERAGE_SPEED
             )
