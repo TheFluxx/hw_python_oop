@@ -63,16 +63,16 @@ class Running(Training):
     LEN_STEP: float = 0.65
     M_IN_KM: float = 1000
     MIN_IN_H: float = 60
-    COEFF_1_FOR_CALCULATING_BURNED_CALORIES_RUNNING: float = 18
-    COEFF_2_FOR_CALCULATING_BURNED_CALORIES_RUNNING: float = 20
+    MULTIPLIER_FOR_AVERAGE_SPEED: float = 18
+    SUBTRACTED_FROM_AVERAGE_SPEED: float = 20
 
     def get_spent_calories(self) -> float:
         """Получить количество затраченных калорий в беге."""
         return (
             (
-                self.COEFF_1_FOR_CALCULATING_BURNED_CALORIES_RUNNING
+                self.MULTIPLIER_FOR_AVERAGE_SPEED_RUNNING
                 * self.get_mean_speed()
-                - self.COEFF_2_FOR_CALCULATING_BURNED_CALORIES_RUNNING
+                - self.SUBTRACTED_FROM_AVERAGE_SPEED
             )
             * self.weight
             / self.M_IN_KM
@@ -159,15 +159,14 @@ def read_package(workout_type: str, data: list) -> Training:
             )
         )
 
-    for data_items in data:
-        if data_items == 0:
-            raise IndexError(
-                'Data items can not be null'
+    if 'SWM' not in data:
+            raise ValueError(
+                'Invalid data'
             )
 
     if len(data) == 0:
         raise IndexError(
-            'Invalid data'
+            'Data can not be null'
         )
 
     return workout_generator[workout_type](*data)
