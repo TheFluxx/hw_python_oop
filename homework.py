@@ -6,20 +6,20 @@ from typing import Union, Type
 class InfoMessage:
     """Информационное сообщение о тренировке."""
 
-    training_type: str
-    duration: float
-    distance: float
-    speed: float
-    calories: float
-    info: str = ('Тип тренировки: {training_type}; '
-                 'Длительность: {duration:.3f} ч.; '
-                 'Дистанция: {distance:.3f} км; '
-                 'Ср. скорость: {speed:.3f} км/ч; '
-                 'Потрачено ккал: {calories:.3f}.')
+    TRAINING_TYPE: str
+    DURATION: float
+    DISTANCE: float
+    SPEED: float
+    CALORIES: float
+    INFO: str = ('Тип тренировки: {TRAINING_TYPE}; '
+                 'Длительность: {DURATION:.3f} ч.; '
+                 'Дистанция: {DISTANCE:.3f} км; '
+                 'Ср. скорость: {SPEED:.3f} км/ч; '
+                 'Потрачено ккал: {CALORIES:.3f}.')
 
     def get_message(self):
         """Возвращает строку с инфомацией о тренировке."""
-        return self.info.format(**asdict(self))
+        return self.INFO.format(**asdict(self))
 
 
 class Training:
@@ -85,8 +85,8 @@ class SportsWalking(Training):
     """Тренировка: спортивная ходьба."""
     LEN_STEP: float = 0.65
     MIN_IN_H: float = 60
-    COEFF_1_FOR_CALCULATING_BURNED_CALORIES_SPORTSWALKING: float = 0.035
-    COEFF_2_FOR_CALCULATING_BURNED_CALORIES_SPORTSWALKING: float = 0.029
+    MULTIPLIER_FOR_WEIGHT: float = 0.035
+    MULTIPLIER_FOR_AVERAGE_SPEED_SPORTS_WALKING: float = 0.029
 
     def __init__(self, action, duration, weight, height):
         super().__init__(action, duration, weight)
@@ -96,10 +96,10 @@ class SportsWalking(Training):
         """Получить количество затраченных калорий в ходьбе."""
         return (
             (
-                self.COEFF_1_FOR_CALCULATING_BURNED_CALORIES_SPORTSWALKING
+                self.MULTIPLIER_FOR_WEIGHT
                 * self.weight
                 + (self.get_mean_speed() ** 2 // self.height)
-                * self.COEFF_2_FOR_CALCULATING_BURNED_CALORIES_SPORTSWALKING
+                * self.MULTIPLIER_FOR_AVERAGE_SPEED_SPORTS_WALKING
                 * self.weight
             )
             * self.duration * self.MIN_IN_H
@@ -110,8 +110,8 @@ class Swimming(Training):
     """Тренировка: плавание."""
     LEN_STEP: float = 1.38
     M_IN_KM: float = 1000
-    COEFF_1_FOR_CALCULATING_BURNED_CALORIES_SWIMMING: float = 1.1
-    COEFF_2_FOR_CALCULATING_BURNED_CALORIES_SWIMMING: float = 2
+    MULTIPLIER_FOR_AVERAGE_SPEED_SWIMMING: float = 1.1
+    MULTIPLER_FOR_WEIGHT_SWIMMING: float = 2
 
     def __init__(self, action, duration, weight, length_pool, count_pool):
         super().__init__(action, duration, weight)
@@ -130,9 +130,9 @@ class Swimming(Training):
         return (
             (
                 self.get_mean_speed()
-                + self.COEFF_1_FOR_CALCULATING_BURNED_CALORIES_SWIMMING
+                + self.MULTIPLIER_FOR_AVERAGE_SPEED_SWIMMING
             )
-            * self.COEFF_2_FOR_CALCULATING_BURNED_CALORIES_SWIMMING
+            * self.MULTIPLER_FOR_WEIGHT_SWIMMING
             * self.weight
         )
 
@@ -160,7 +160,7 @@ def read_package(workout_type: str, data: list) -> Training:
         )
 
     if len(data) == 0:
-        raise IndexError(
+        raise TypeError(
             'Data can not be null'
         )
 
