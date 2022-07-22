@@ -7,6 +7,7 @@ from typing import Union, Type
 # AssertionError: У метода `__init__`
 # класса `InfoMessage` должен быть параметр training_type.
 
+
 @dataclass
 class InfoMessage:
     """Информационное сообщение о тренировке."""
