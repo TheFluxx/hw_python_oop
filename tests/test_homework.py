@@ -48,7 +48,7 @@ def test_InfoMessage():
     info_message = homework.InfoMessage
     info_message_signature = inspect.signature(info_message)
     info_message_signature_list = list(info_message_signature.parameters)
-    for p in ['TRAINING_TYPE', 'DURATION', 'DISTANCE', 'SPEED', 'CALORIES']:
+    for p in ['training_type', 'duration', 'distance', 'speed', 'calories']:
         assert p in info_message_signature_list, (
             'У метода `__init__` класса `InfoMessage` должен быть '
             f'параметр {p}.'
