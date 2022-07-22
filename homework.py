@@ -1,21 +1,25 @@
 from dataclasses import dataclass, asdict
 from typing import Union, Type
 
-
+# В ТЗ указано писать именно в таком регистре. 
+# Если константы переводить в верхний регистр
+# Код не проходит тесты
+# AssertionError: У метода `__init__`
+# класса `InfoMessage` должен быть параметр training_type.
 @dataclass
 class InfoMessage:
     """Информационное сообщение о тренировке."""
 
-    TRAINING_TYPE: str
-    DURATION: float
-    DISTANCE: float
-    SPEED: float
-    CALORIES: float
-    INFO: str = ('Тип тренировки: {TRAINING_TYPE}; '
-                 'Длительность: {DURATION:.3f} ч.; '
-                 'Дистанция: {DISTANCE:.3f} км; '
-                 'Ср. скорость: {SPEED:.3f} км/ч; '
-                 'Потрачено ккал: {CALORIES:.3f}.')
+    training_type: str
+    duration: float
+    distance: float
+    speed: float
+    calories: float
+    info: str = ('Тип тренировки: {training_type}; '
+                 'Длительность: {duration:.3f} ч.; '
+                 'Дистанция: {distance:.3f} км; '
+                 'Ср. скорость: {speed:.3f} км/ч; '
+                 'Потрачено ккал: {calories:.3f}.')
 
     def get_message(self):
         """Возвращает строку с инфомацией о тренировке."""
