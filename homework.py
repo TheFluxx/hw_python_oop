@@ -1,11 +1,12 @@
 from dataclasses import dataclass, asdict
 from typing import Union, Type
 
-# В ТЗ указано писать именно в таком регистре. 
+# В ТЗ указано писать именно в таком регистре.
 # Если константы переводить в верхний регистр
 # Код не проходит тесты
 # AssertionError: У метода `__init__`
 # класса `InfoMessage` должен быть параметр training_type.
+
 @dataclass
 class InfoMessage:
     """Информационное сообщение о тренировке."""
